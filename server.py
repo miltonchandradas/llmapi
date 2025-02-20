@@ -2,7 +2,8 @@ from api_keys import openai_api_key
 from flask import Flask, request
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
+from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
+from pydantic import BaseModel, Field
 
 import os
 import json
@@ -43,6 +44,42 @@ def get_joke():
     joke_response = chain.invoke({"topic": topic})
     
     return joke_response
+
+
+@app.route("/v1/products", methods=["POST"])
+def get_products():
+    global chat_llm
+    
+    query = dict(request.json)
+    category = query["category"]
+    count = query["count"]
+    
+    class Product(BaseModel):
+        name: str = Field(description="Name of product")
+        description: str = Field(description="Description of product")   
+        price: float = Field(description="Price of the product")
+        rating: int = Field(description="Rating of the product from 1 to 5")
+        unitsInStock: int = Field(description="Number of units that are in stock")
+        
+    class Inventory(BaseModel):
+        products: list[Product] = Field(description="This is the list of products")
+
+    output_parser = JsonOutputParser(pydantic_object=Inventory)
+    
+    prompt_template = ChatPromptTemplate(
+        messages = [
+            ("system", "You are a helpful AI assistant.  \nFormatting Instructions: {format_instructions}"),
+            ("human", "Can you create {count} fictitious products for the following category: {category}")
+    ])
+                                     
+    chain = prompt_template | chat_llm | output_parser
+    products_response = chain.invoke({
+        "category": category,
+        "count": count,
+        "format_instructions": output_parser.get_format_instructions()
+        })
+    
+    return products_response
 
 if __name__ == "__main__":
     print("Serving Initializing")

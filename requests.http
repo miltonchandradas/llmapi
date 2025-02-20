@@ -8,3 +8,12 @@ Content-Type: application/json
 {
     "topic": "Cats"
 }
+
+### POST /v1/products
+POST http://localhost:5000/v1/products
+Content-Type: application/json
+
+{
+    "category": "Electronics",
+    "count": 2
+}
