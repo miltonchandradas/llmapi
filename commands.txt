@@ -1,0 +1,12 @@
+SETUP VIRTUAL ENV
+-----------------------------------------------------------------------------------------
+pip install virtualenv
+python -m venv myenv
+myenv/Scripts/activate.bat
+
+myenv/Scripts/deactivate.bat
+
+
+RUN SERVER
+-----------------------------------------------------------------------------------------
+python server.py
