@@ -97,7 +97,7 @@ def get_products():
 
 
 @app.route("/v1/uploadPDF", methods=["POST"])
-def upload_pdf():
+async def upload_pdf():
     global db
     
     file = request.files['file']
@@ -113,7 +113,27 @@ def upload_pdf():
     db = FAISS.from_documents(documents, embeddings_model)
     
     return jsonify({"message": "File uploaded successfully", "filename": file.filename}), 200
-        
+
+
+@app.route("/v1/queryPDF", methods=["POST"])
+def query_pdf():
+    global db
+    
+    query = dict(request.json)
+    question = query["question"]
+    
+    output_parser = StrOutputParser()
+    docs = db.similarity_search(question, k=8)
+
+    context = "\n\n".join([doc.page_content for doc in docs])
+    prompt = f"Context:\n{context}\n\nQuestion: {question}"
+
+    chain = chat_llm | output_parser
+    answer = chain.invoke(prompt)
+    
+    return jsonify({"question": question, "answer": answer}), 200
+    
+     
 if __name__ == "__main__":
     print("Serving Initializing")
     init()

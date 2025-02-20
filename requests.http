@@ -17,3 +17,11 @@ Content-Type: application/json
     "category": "Electronics",
     "count": 2
 }
+
+### POST /v1/queryPDF
+POST http://localhost:5000/v1/queryPDF
+Content-Type: application/json
+
+{
+    "question": "What was Corky's uncle's profession - something to do with Jute ?"
+}
