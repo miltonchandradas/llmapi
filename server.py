@@ -1,5 +1,5 @@
 from api_keys import openai_api_key
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
@@ -12,6 +12,14 @@ import json
 app = Flask(__name__)
 appHasRunBefore = False
 os.environ["OPENAI_API_KEY"] = openai_api_key
+
+# Set upload folder
+UPLOAD_FOLDER = "uploads"
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+# Ensure the upload directory exists
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
 
 @app.before_request
 def init():
@@ -81,6 +89,15 @@ def get_products():
     
     return products_response
 
+
+@app.route("/v1/uploadPDF", methods=["POST"])
+def upload_pdf():
+    file = request.files['file']
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+    file.save(file_path)
+    
+    return jsonify({"message": "File uploaded successfully", "filename": file.filename}), 200
+        
 if __name__ == "__main__":
     print("Serving Initializing")
     init()
