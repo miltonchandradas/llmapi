@@ -9,4 +9,5 @@ myenv/Scripts/deactivate.bat
 
 RUN SERVER
 -----------------------------------------------------------------------------------------
+pip install -r requirements.txt
 python server.py

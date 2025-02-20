@@ -1,2 +1,10 @@
 ### GET /v1/greeting
 GET http://localhost:5000/v1/greeting
+
+### POST /v1/joke
+POST http://localhost:5000/v1/joke
+Content-Type: application/json
+
+{
+    "topic": "Cats"
+}
