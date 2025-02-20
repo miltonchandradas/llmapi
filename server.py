@@ -1,8 +1,10 @@
 from api_keys import openai_api_key
 from flask import Flask, request, jsonify
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.vectorstores import FAISS
 from pydantic import BaseModel, Field
 
 import os
@@ -20,12 +22,16 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 # Ensure the upload directory exists
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+    
+chat_llm = None
+db = None
 
 @app.before_request
 def init():
     # Set up langchain
     global appHasRunBefore
     global chat_llm
+    global db
 
     if not appHasRunBefore:
         chat_llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7)  
@@ -92,9 +98,19 @@ def get_products():
 
 @app.route("/v1/uploadPDF", methods=["POST"])
 def upload_pdf():
+    global db
+    
     file = request.files['file']
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
     file.save(file_path)
+    
+    loader = PyPDFLoader(file_path)
+    documents = loader.load()
+    
+    embeddings_model = OpenAIEmbeddings()
+    
+    # Create a FAISS vector store from the documents
+    db = FAISS.from_documents(documents, embeddings_model)
     
     return jsonify({"message": "File uploaded successfully", "filename": file.filename}), 200
         
