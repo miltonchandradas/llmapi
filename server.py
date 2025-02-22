@@ -1,5 +1,6 @@
 from api_keys import openai_api_key
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
@@ -12,6 +13,7 @@ import json
 
 # Creates Flask serving engine
 app = Flask(__name__)
+CORS(app)
 appHasRunBefore = False
 os.environ["OPENAI_API_KEY"] = openai_api_key
 

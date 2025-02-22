@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My LLM APIs</title>
+  <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"
+    />
+</head>
+<body>
+  <div class="container">
+    <div class="jumbotron">
+      <h1>My LLM APIs</h1>
+      <h4>Coding made simple !!</h4>
+    </div>
+    <div class="panel panel-primary">
+      <div class="panel-heading">GET Greeting Request</div>
+      <div class="panel-body">
+        <button
+          class="btn btn-primary"
+          onclick="getData('http://localhost:5000/v1/greeting', false)"
+        >
+          Greeting !!
+        </button>
+        <button class="btn btn-warning" onclick="clearOutput()">Clear</button>
+        <div class="panel-body" id="greetingResult"></div>
+      </div>
+    </div>
+    <div class="panel panel-primary">
+      <div class="panel-heading">POST Joke Request</div>
+      <div class="panel-body">
+        <form class="form-inline" id="jokeForm">
+          <div class="form-group">
+            <textarea
+              id="topicPayload"
+              class="form-control"
+              rows="2"
+              cols="100"
+            >{ "topic": "Cats" }</textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            Tell me a joke !!
+          </button>
+        </form>
+        <br />
+
+        <button class="btn btn-warning" onclick="clearOutput()">Clear</button>
+        <div class="panel-body" id="jokeResult"></div>
+      </div>
+    </div>
+    <div class="panel panel-primary">
+      <div class="panel-heading">POST Products Request</div>
+      <div class="panel-body">
+        <form class="form-inline" id="productsForm">
+          <div class="form-group">
+            <textarea
+              id="categoryPayload"
+              class="form-control"
+              rows="2"
+              cols="100"
+            >{ "category": "Electronics", "count": 2 }</textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            Show me some Products !!
+          </button>
+        </form>
+        <br />
+
+        <button class="btn btn-warning" onclick="clearOutput()">Clear</button>
+        <div class="panel-body" id="productsResult"></div>
+      </div>
+    </div>
+    <div class="panel panel-primary">
+      <div class="panel-heading">POST RAG Request</div>
+      <div class="panel-body">
+        <form class="form-inline" id="questionForm">
+          <div class="form-group">
+            <textarea
+              id="questionPayload"
+              class="form-control"
+              rows="2"
+              cols="100"
+            >{ "question": "What was Corky's profession ?" }</textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            Answer me...  Now !!
+          </button>
+        </form>
+        <br />
+
+        <button class="btn btn-warning" onclick="clearOutput()">Clear</button>
+        <div class="panel-body" id="ragResult"></div>
+      </div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"
+    ></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+      integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"
+    ></script>
+    <script src="app.js"></script>
+</body>
+</html>
